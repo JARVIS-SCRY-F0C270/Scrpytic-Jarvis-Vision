@@ -301,6 +301,10 @@ app.get('/api/categories', (req, res) => {
 // Static Files & Single Page App Fallback
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
