@@ -1,4 +1,3 @@
-````markdow
 # ⚡ JARVIS Vision — Screenshot Semantic Search Engine
 
 ### 🏆 SCRYPTIC HACKATHON | Team JARVIS (`SCRY-F0C270`) | Track: Open Innovation
