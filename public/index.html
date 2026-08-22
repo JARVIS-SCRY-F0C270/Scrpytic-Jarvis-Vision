@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JARVIS Vision - Screenshot Semantic Engine | Scryptic Hackathon</title>
+  <!-- Google Fonts & Tailwind CDN & Lucide Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#0b0f19] text-slate-100 min-h-screen font-['Inter'] antialiased selection:bg-cyan-500 selection:text-black">
+
+  <!-- Top Announcement / Live Public Link Bar -->
+  <div id="public-banner" class="bg-gradient-to-r from-cyan-950 via-slate-900 to-blue-950 border-b border-cyan-500/20 px-4 py-2 text-xs flex flex-wrap items-center justify-between gap-2 shadow-lg backdrop-blur-md">
+    <div class="flex items-center gap-2">
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+        🏆 SCRYPTIC HACKATHON
+      </span>
+      <span class="text-slate-300 font-medium">Team JARVIS <span class="text-cyan-400 font-mono font-bold">(SCRY-F0C270)</span> • Track: <span class="text-slate-200">Open Innovation</span></span>
+    </div>
+    <div class="flex items-center gap-3">
+      <div id="tunnel-status-pill" class="flex items-center gap-1.5 bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="text-slate-300 font-mono text-[11px]" id="tunnel-url-text">Public URL: Connecting...</span>
+        <button id="btn-copy-public-url" class="ml-1.5 text-cyan-400 hover:text-cyan-300 font-semibold text-[11px] underline cursor-pointer" title="Copy Public URL for Judges">Copy</button>
+      </div>
+      <div class="flex items-center gap-1.5 text-emerald-400 bg-emerald-950/40 px-2 py-0.5 rounded border border-emerald-500/30 text-[11px]">
+        <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+        <span>100% User Privacy Isolated</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <header class="sticky top-0 z-40 bg-[#0b0f19]/80 backdrop-blur-xl border-b border-slate-800/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 ring-1 ring-cyan-400/40">
+          <i data-lucide="scan-text" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-100 to-cyan-300">
+              JARVIS <span class="text-cyan-400">VISION</span>
+            </h1>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right User / Auth Info -->
+      <div class="flex items-center gap-3">
+        <button id="btn-seed-samples" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Sample Demos</span>
+        </button>
+
+        <div id="user-profile-section" class="flex items-center gap-2">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+    <!-- Search Section -->
+    <div class="glass-card rounded-2xl p-6 border border-cyan-500/20 bg-gradient-to-b from-slate-900/80 to-[#0b0f19]/90 shadow-2xl relative overflow-hidden">
+      <div class="absolute -right-20 -top-20 w-64 h-64 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -left-20 -bottom-20 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 space-y-4">
+        <!-- Search Input Bar -->
+        <div class="relative flex items-center">
+          <div class="absolute left-4 text-cyan-400 flex items-center pointer-events-none">
+            <i data-lucide="search" class="w-6 h-6"></i>
+          </div>
+          <input
+            type="text"
+            id="search-input"
+            class="w-full bg-slate-950/80 border-2 border-slate-700/80 focus:border-cyan-400 text-white placeholder-slate-400 text-base sm:text-lg rounded-xl pl-13 pr-32 py-4 outline-none transition shadow-inner font-medium"
+            placeholder="Search by meaning... e.g. 'dinner bill last week', 'wifi password', 'pasta recipe', 'python error', 'flight boarding'"
+            autocomplete="off"
+          />
+          <div class="absolute right-3 flex items-center gap-2">
+            <button id="btn-clear-search" class="hidden p-2 text-slate-400 hover:text-white transition">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+            <button id="btn-search-trigger" class="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-sm shadow-md transition flex items-center gap-1.5">
+              <span>Search</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sample Query Quick Chips -->
+        <div class="flex flex-wrap items-center gap-1.5 text-xs text-slate-400">
+          <span class="font-semibold text-slate-300 flex items-center gap-1">
+            <i data-lucide="sparkle" class="w-3 h-3 text-cyan-400"></i> Try searching:
+          </span>
+          <button class="query-chip" data-query="Starbucks dinner bill">🧾 "Starbucks dinner bill"</button>
+          <button class="query-chip" data-query="Tuscan pasta garlic recipe">🍲 "Tuscan pasta garlic recipe"</button>
+          <button class="query-chip" data-query="wifi password secret">🔑 "wifi password secret"</button>
+          <button class="query-chip" data-query="python traceback error">💻 "python traceback error"</button>
+          <button class="query-chip" data-query="Evergreen Terrace delivery address">📍 "Evergreen Terrace address"</button>
+          <button class="query-chip" data-query="flight to London gate">✈️ "flight to London gate"</button>
+          <button class="query-chip" data-query="UPI ₹2,450 payment">💳 "UPI ₹2,450 payment"</button>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="pt-2 flex items-center gap-2 overflow-x-auto pb-2 scrollbar-thin" id="category-filters-container">
+          <button class="cat-pill active" data-category="all">
+            <i data-lucide="grid" class="w-3.5 h-3.5"></i>
+            <span>All Types</span>
+            <span class="count-badge" id="cat-count-all">0</span>
+          </button>
+          <button class="cat-pill" data-category="receipt">
+            <i data-lucide="receipt" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>Receipts & Invoices</span>
+            <span class="count-badge" id="cat-count-receipt">0</span>
+          </button>
+          <button class="cat-pill" data-category="recipe">
+            <i data-lucide="utensils" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>Food & Recipes</span>
+            <span class="count-badge" id="cat-count-recipe">0</span>
+          </button>
+          <button class="cat-pill" data-category="address">
+            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-red-400"></i>
+            <span>Addresses & Maps</span>
+            <span class="count-badge" id="cat-count-address">0</span>
+          </button>
+          <button class="cat-pill" data-category="code">
+            <i data-lucide="code" class="w-3.5 h-3.5 text-purple-400"></i>
+            <span>Code & Tech</span>
+            <span class="count-badge" id="cat-count-code">0</span>
+          </button>
+          <button class="cat-pill" data-category="chat">
+            <i data-lucide="message-square" class="w-3.5 h-3.5 text-blue-400"></i>
+            <span>Chats & Messages</span>
+            <span class="count-badge" id="cat-count-chat">0</span>
+          </button>
+          <button class="cat-pill" data-category="payment">
+            <i data-lucide="credit-card" class="w-3.5 h-3.5 text-teal-400"></i>
+            <span>Payments & UPI</span>
+            <span class="count-badge" id="cat-count-payment">0</span>
+          </button>
+          <button class="cat-pill" data-category="credentials">
+            <i data-lucide="key" class="w-3.5 h-3.5 text-yellow-400"></i>
+            <span>Credentials & Keys</span>
+            <span class="count-badge" id="cat-count-credentials">0</span>
+          </button>
+          <button class="cat-pill" data-category="travel">
+            <i data-lucide="plane" class="w-3.5 h-3.5 text-cyan-400"></i>
+            <span>Travel & Tickets</span>
+            <span class="count-badge" id="cat-count-travel">0</span>
+          </button>
+          <button class="cat-pill" data-category="document">
+            <i data-lucide="file-text" class="w-3.5 h-3.5 text-slate-400"></i>
+            <span>Documents</span>
+            <span class="count-badge" id="cat-count-document">0</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Drag & Drop / Fast Batch Ingestion Zone -->
+    <div id="dropzone" class="glass-card rounded-2xl border-2 border-dashed border-slate-700 hover:border-cyan-400 transition-all p-6 text-center cursor-pointer bg-slate-900/30 hover:bg-slate-900/60 relative overflow-hidden group">
+      <input type="file" id="file-input" multiple accept="image/*" class="hidden">
+      
+      <div class="flex flex-col items-center justify-center space-y-2">
+        <div class="w-12 h-12 rounded-2xl bg-slate-800 group-hover:bg-cyan-500/20 text-cyan-400 flex items-center justify-center transition shadow-inner">
+          <i data-lucide="upload-cloud" class="w-6 h-6 group-hover:scale-110 transition-transform"></i>
+        </div>
+        <h4 class="text-base font-bold text-white">
+          Drag & Drop Multiple Screenshots, or <span class="text-cyan-400 underline">Browse Files</span>
+        </h4>
+        <p class="text-xs text-slate-400 max-w-md">
+          ⚡ <b>High-Speed Multi-Image Engine</b>: Instant OCR text extraction, automatic content categorization, & semantic vector indexing.
+        </p>
+        <div class="flex items-center gap-2 pt-1">
+          <span class="inline-flex items-center gap-1 text-[11px] font-mono bg-slate-800/90 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+            <kbd class="text-cyan-400">Ctrl</kbd> + <kbd class="text-cyan-400">V</kbd> paste screenshot anywhere
+          </span>
+          <span class="text-slate-500 text-xs">•</span>
+          <span class="text-[11px] text-slate-400">Batch of 50+ images supported</span>
+        </div>
+      </div>
+
+      <!-- Upload Progress Indicator -->
+      <div id="upload-progress-wrapper" class="hidden mt-4 pt-4 border-t border-slate-800 text-left">
+        <div class="flex justify-between text-xs text-slate-300 mb-1.5 font-medium">
+          <span id="upload-status-label" class="flex items-center gap-2">
+            <i data-lucide="loader-2" class="w-3.5 h-3.5 text-cyan-400 animate-spin"></i>
+            <span>Processing batch OCR and semantic vectors...</span>
+          </span>
+          <span id="upload-percent-label" class="font-mono text-cyan-400">0%</span>
+        </div>
+        <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+          <div id="upload-progress-bar" class="bg-gradient-to-r from-cyan-500 to-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <div id="upload-speed-metrics" class="text-[11px] text-slate-400 mt-2 font-mono flex justify-between">
+          <span>Concurrency: 3 Parallel OCR Workers</span>
+          <span id="upload-time-taken">Processing...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gallery / Results Section -->
+    <div class="space-y-4">
+      <!-- Section Header & Controls -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <h3 id="results-title" class="text-lg font-bold text-white flex items-center gap-2">
+            <span>Your Screenshots</span>
+            <span id="results-badge-count" class="text-xs bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full border border-slate-700 font-mono">0</span>
+          </h3>
+          <span id="search-duration-tag" class="hidden text-xs text-slate-400 font-mono"></span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label for="sort-select" class="text-xs text-slate-400">Sort:</label>
+          <select id="sort-select" class="bg-slate-800 text-slate-200 text-xs rounded-lg px-2.5 py-1.5 border border-slate-700 outline-none">
+            <option value="relevance">Semantic Match Score</option>
+            <option value="newest">Newest Uploaded</option>
+            <option value="oldest">Oldest Uploaded</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Screenshot Cards Grid -->
+      <div id="screenshots-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <!-- Dynamic Cards Inserted by JS -->
+      </div>
+
+      <!-- Empty State -->
+      <div id="empty-state" class="hidden text-center py-16 px-4 rounded-2xl glass-card border border-slate-800">
+        <div class="w-16 h-16 rounded-2xl bg-slate-800/80 text-slate-400 flex items-center justify-center mx-auto mb-3">
+          <i data-lucide="image-off" class="w-8 h-8"></i>
+        </div>
+        <h4 class="text-lg font-bold text-slate-200">No screenshots found</h4>
+        <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1 mb-4">
+          Try a different semantic query or upload screenshots to index them by content!
+        </p>
+        <button id="btn-empty-seed" class="px-4 py-2 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs shadow-md transition inline-flex items-center gap-1.5">
+          <i data-lucide="sparkles" class="w-4 h-4"></i>
+          <span>Load Hackathon Demo Samples</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Screenshot Inspector Modal -->
+  <div id="modal-inspector" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass-card bg-[#0e1424] border border-slate-700 max-w-5xl w-full rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in duration-200">
+      
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
+        <div class="flex items-center gap-3">
+          <div id="modal-category-icon-box" class="w-8 h-8 rounded-lg flex items-center justify-center bg-cyan-500/20 text-cyan-400">
+            <i data-lucide="tag" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="modal-title" class="font-bold text-white text-base">Screenshot Inspection</h3>
+              <span id="modal-category-badge" class="px-2 py-0.5 rounded text-[11px] font-semibold bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Category</span>
+            </div>
+            <p id="modal-meta-info" class="text-xs text-slate-400 font-mono">Uploaded on ... • Size: ...</p>
+          </div>
+        </div>
+        <button id="btn-close-modal" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Two Column Layout) -->
+      <div class="p-6 overflow-y-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Left: Image Viewer with Zoom -->
+        <div class="lg:col-span-7 flex flex-col space-y-3">
+          <div class="bg-black/60 rounded-xl border border-slate-800 p-2 flex items-center justify-center min-h-[340px] max-h-[460px] overflow-hidden relative group">
+            <img id="modal-image-preview" src="" alt="Screenshot" class="max-h-[440px] w-auto object-contain rounded-lg shadow-md transition-transform group-hover:scale-105 duration-300">
+            <div class="absolute bottom-3 right-3 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-950/80 px-2 py-1 rounded-lg border border-slate-700 text-xs">
+              <span class="text-slate-300 font-mono">🔒 Private Workspace</span>
+            </div>
+          </div>
+          <div class="flex items-center justify-between text-xs text-slate-400">
+            <span id="modal-ocr-confidence" class="font-mono">OCR Confidence: 96%</span>
+            <span id="modal-processing-time" class="font-mono">Processed in: 240ms</span>
+          </div>
+        </div>
+
+        <!-- Right: AI Content Analysis & Extracted OCR Text -->
+        <div class="lg:col-span-5 flex flex-col space-y-4">
+          
+          <!-- AI Semantic Summary Card -->
+          <div class="p-3.5 rounded-xl bg-slate-900/80 border border-cyan-500/20 space-y-1.5">
+            <div class="flex items-center gap-1.5 text-xs font-semibold text-cyan-300">
+              <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+              <span>AI Content Understanding (By Meaning)</span>
+            </div>
+            <p id="modal-summary" class="text-xs text-slate-200 leading-relaxed font-medium">
+              Summary description...
+            </p>
+          </div>
+
+          <!-- Extracted Entities breakdown -->
+          <div class="space-y-2">
+            <h5 class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+              <i data-lucide="layers" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>Extracted Entities</span>
+            </h5>
+            <div id="modal-entities-container" class="flex flex-wrap gap-1.5">
+              <!-- Entity pills -->
+            </div>
+          </div>
+
+          <!-- OCR Extracted Text Area -->
+          <div class="flex-1 flex flex-col space-y-2">
+            <div class="flex items-center justify-between">
+              <h5 class="text-xs font-semibold text-slate-300 flex items-center gap-1.5">
+                <i data-lucide="file-text" class="w-3.5 h-3.5 text-emerald-400"></i>
+                <span>Full Extracted OCR Text</span>
+              </h5>
+              <button id="btn-copy-ocr-text" class="text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1 font-semibold px-2 py-0.5 rounded bg-cyan-950/60 border border-cyan-500/30 transition">
+                <i data-lucide="copy" class="w-3 h-3"></i>
+                <span>Copy Text</span>
+              </button>
+            </div>
+            <textarea
+              id="modal-ocr-textarea"
+              readonly
+              class="w-full h-44 bg-slate-950/90 border border-slate-800 rounded-xl p-3 text-xs text-slate-300 font-mono leading-relaxed outline-none resize-none selection:bg-cyan-500 selection:text-black"
+            ></textarea>
+          </div>
+
+          <!-- Actions: Delete / Download -->
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+            <button id="btn-delete-screenshot" class="text-xs text-red-400 hover:text-red-300 flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-950/30 border border-red-500/20 hover:bg-red-950/50 transition">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              <span>Delete</span>
+            </button>
+            <a id="btn-download-image" href="#" download class="text-xs text-slate-300 hover:text-white flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 transition">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span>Download</span>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth / Sign In Modal -->
+  <div id="modal-auth" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="glass-card bg-[#0e1424] border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl space-y-4">
+      <div class="text-center space-y-1">
+        <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center mx-auto shadow-lg shadow-cyan-500/20">
+          <i data-lucide="lock" class="w-6 h-6 text-white"></i>
+        </div>
+        <h3 class="text-xl font-bold text-white">Private Workspace Login</h3>
+        <p class="text-xs text-slate-400">Your screenshots remain strictly confidential and isolated to your account.</p>
+      </div>
+
+      <!-- Quick 1-Click Demo Guest Button for Judges -->
+      <div class="p-3 bg-gradient-to-r from-cyan-950/60 to-blue-950/60 border border-cyan-500/30 rounded-xl text-center space-y-2">
+        <div class="flex items-center justify-center gap-1.5 text-xs text-cyan-300 font-semibold">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Hackathon Evaluation & Instant Demo</span>
+        </div>
+        <button id="btn-quick-guest-login" class="w-full py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs shadow-lg transition flex items-center justify-center gap-2">
+          <span>⚡ Instant 1-Click Demo Guest Login</span>
+        </button>
+        <p class="text-[10px] text-slate-400">Creates an isolated private workspace seeded with sample screenshots.</p>
+      </div>
+
+      <div class="relative flex py-1 items-center">
+        <div class="flex-grow border-t border-slate-800"></div>
+        <span class="flex-shrink mx-3 text-slate-500 text-xs">Or Sign In with Account</span>
+        <div class="flex-grow border-t border-slate-800"></div>
+      </div>
+
+      <!-- Form -->
+      <form id="auth-form" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Username</label>
+          <input type="text" id="auth-username" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-400 outline-none" placeholder="e.g. jarvis_user">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Password</label>
+          <input type="password" id="auth-password" required class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-400 outline-none" placeholder="••••••••">
+        </div>
+        <div id="auth-name-container" class="hidden">
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Your Full Name</label>
+          <input type="text" id="auth-name" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:border-cyan-400 outline-none" placeholder="e.g. Alex Smith">
+        </div>
+
+        <div id="auth-error-msg" class="hidden text-xs text-red-400 p-2 rounded bg-red-950/50 border border-red-500/30"></div>
+
+        <button type="submit" id="btn-auth-submit" class="w-full py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition border border-slate-600">
+          Sign In
+        </button>
+      </form>
+
+      <div class="text-center text-xs text-slate-400">
+        <span id="auth-toggle-text">Don't have an account?</span>
+        <button id="btn-toggle-auth-mode" class="text-cyan-400 hover:underline font-semibold ml-1">Create Account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2"></div>
+
+  <!-- Footer -->
+  <footer class="mt-12 border-t border-slate-800/80 py-6 text-center text-xs text-slate-500 space-y-2">
+    <p>
+      <b>Scryptic Hackathon</b> • Team <b>JARVIS</b> (Code: <span class="text-cyan-400 font-mono">SCRY-F0C270</span>) • Track: <b>Open Innovation</b>
+    </p>
+    <p class="text-[11px] text-slate-600">
+      Built with Tesseract OCR, Zero-Shot Semantic Categorization, Vector Embeddings, & End-to-End Tenant Isolation.
+    </p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

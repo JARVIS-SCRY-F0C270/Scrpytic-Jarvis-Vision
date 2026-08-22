@@ -1,0 +1,31 @@
+﻿{
+  "name": "screenshot-sense",
+  "version": "1.0.0",
+  "description": "Scryptic Hackathon - Team JARVIS: Intelligent Screenshot Semantic Search & Categorization Engine",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "tunnel": "node server/tunnel.js"
+  },
+  "keywords": [
+    "ocr",
+    "semantic-search",
+    "screenshot-search",
+    "hackathon",
+    "vector-search",
+    "ai-classifier"
+  ],
+  "author": "Team JARVIS (SCRY-F0C270)",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "localtunnel": "^2.0.2",
+    "multer": "^1.4.5-lts.1",
+    "tesseract.js": "^5.1.1",
+    "uuid": "^9.0.1"
+  }
+}
